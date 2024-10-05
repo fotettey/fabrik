@@ -1,0 +1,11 @@
+
+172.16.132.164       vault.dev.local.self
+
+172.16.132.163    db.shared-postgres.self
+
+172.16.132.165     jenkins.build.fotettey.hub
+
+172.16.132.166       sonar.build.fotettey.hub
+
+172.16.132.167       nexus.build.fotettey.hub
+

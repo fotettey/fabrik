@@ -10,7 +10,7 @@ services:
        #- ./vault-configs/pki_int_policy.hcl:/vault/config/pki_int_policy.hcl
       - ./vault-configs:/vault/config/
       - ~/vault-data/app-data:/vault/file/
-      - ~/vault-data/certs:/vault/certs/
+      - ~/vault-data/certs:/tmp/certs/
     environment:
       - VAULT_ADDR=https://127.0.0.1:8200
     cap_add:
@@ -26,11 +26,11 @@ services:
       - VAULT_ADDR=https://vault.local.self:8200
       - MY_VAULT_TOKEN=${MY_VAULT_TOKEN:-test}
         #This verifies the Server Cert, so we use it's CA chain, not the clients
-      - VAULT_CACERT="/vault/certs/intCA/ca-chain.crt"
+      - VAULT_CACERT="/tmp/certs/intCA/ca-chain.crt"
        #- VAULT_CLIENT_CERT="/vault/file/pki/output/client-certs/client-cert.pem"
        #- VAULT_CLIENT_KEY="/vault/file/pki/output/client-certs/client-key.pem"
     volumes:
-      - ~/vault-data/certs/intCA/ca-chain.crt:/vault/certs/intCA/ca-chain.crt
+      - ~/vault-data/certs:/tmp/certs/intCA/ca-chain.crt
       - ./vault-root-token:/vault/vault-root-token
       - ./vault-configs/vault-init.sh:/usr/local/bin/vault-init.sh
     entrypoint: /usr/local/bin/vault-init.sh

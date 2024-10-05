@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", inline: "echo Hello from $(hostname)"
+  config.vm.provision "shell" do |ssh|
+    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    ssh.inline = <<-SHELL
+      echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+      echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+      BERLIN_TZ=$(timedatectl list-timezones | grep Berlin)
+      timedatectl set-timezone ${BERLIN_TZ}
+      timedatectl
+      mkdir -p /home/vagrant/projects
+      chown -R vagrant:vagrant /home/vagrant/projects
+      SHELL
+
+  config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
+  config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
+    # Ansible Installation
+    ## https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-rocky-linux-9
+    ## https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#intro-installation-guide
+    ## https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-changelogs
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python3 get-pip.py --user
+    python3 -m pip -V
+    sudo dnf install epel-release -y
+    sudo dnf install ansible -y
+    ansible-galaxy role install geerlingguy.docker
+    ansible-galaxy role install geerlingguy.git
+    export ANSIBLE_HOST_KEY_CHECKING=False
+    ansible-playbook /home/vagrant/projects/build-playbook.yaml --become 
+    git --version
+    docker --version
+    GIT_USERNAME=fotettey
+    GIT_EMAIL=fotettey@gmail.com
+    git config --global user.name ${GIT_USERNAME}
+    git config --global user.email ${GIT_EMAIL}
+    # Adding Git SSH Identity:
+    chmod 400 .ssh/git-auto
+    eval "$(ssh-agent -s)"
+    ssh-add /home/vagrant/.ssh/git-auto
+    # Git Clone Projects
+    cd /home/vagrant/projects
+    GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:fotettey/software.factory.git
+    echo "Installing `hostname` using Docker Compose"
+    # chmod +x /home/vagrant/projects/software.factory/home-env/build/vault/vault-init.sh
+    # cd /home/vagrant/projects/software.factory/home-env/build
+    # docker compose up -d
+    SHELL
+  end
+
+
+  config.vm.define "postgres" do |postgres|
+    postgres.vm.box = "bento/rockylinux-9"
+    postgres.vm.synced_folder ".", "/vagrant", disabled: true
+    postgres.vm.boot_timeout = 3000
+  
+    postgres.vm.hostname = "postgres"
+    postgres.vm.provider "vmware_desktop" do |post|
+      post.vmx["memsize"] = "2024"
+      post.vmx["numvcpus"] = "2"
+      post.gui = false
+      post.vmx["ethernet0.pcislotnumber"] = "160"
+    end
+  end
+
+end
+

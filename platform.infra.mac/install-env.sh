@@ -14,7 +14,10 @@ SECRETS_VAULT=secret-vault
 cd $WKG_DIR/$SECRETS_VAULT
 vagrant up
 vagrant scp ~/Documents/VAGRANT-DEVBOX-DOCUMENTS/vault-data vault:/home/vagrant
+vagrant scp ~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs vault:/home/vagrant/vault-data/certs
 VAULT_IP=$(vagrant ssh vault -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
+vagrant ssh vault -c "sudo -u vagrant chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh && docker compose -f /home/vagrant/projects/fabrik/apps/vault/install-docker/docker-compose.yml up -d"
+
 
 # Provision Check and Provision for DB:
 cd $WKG_DIR/$PRIMARY_DB

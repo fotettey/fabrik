@@ -37,6 +37,13 @@ Vagrant.configure("2") do |config|
     ansible-playbook /home/vagrant/projects/build-playbook.yaml --become 
     git --version
     docker --version
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    sudo chown "$USER":"$USER" /home/"$USER"/.docker -R || echo "Docker post step non-fatal error"
+    sudo chmod g+rwx "$HOME/.docker" -R  || echo "Docker post step non-fatal error"
+    docker run --name hello-world hello-world || echo "Docker post step non-fatal error"
+    docker rm hello-world  || echo "Docker post step non-fatal error"
     GIT_USERNAME=fotettey
     GIT_EMAIL=fotettey@gmail.com
     git config --global user.name ${GIT_USERNAME}
@@ -49,11 +56,16 @@ Vagrant.configure("2") do |config|
     cd /home/vagrant/projects
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:fotettey/software.factory.git
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone https://github.com/fotettey/fabrik.git
+     # sudo chmod u+rw,g+rw,o+rw /home/vagrant/projects/software.factory/certs/
+     # cd /home/vagrant/projects/software.factory/certs/
+     # tar -xvzf intCA.tgz
+     # tar -xvzf wildcard.tgz
+     # sudo chmod 644 -R /home/vagrant/projects/software.factory/certs/
+     # sudo chown $(whoami):$(whoami) /home/vagrant/projects/software.factory/certs/
     echo "Installing `hostname` using Docker Compose"
-    # sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh
-    cd /home/vagrant/projects/fabrik/apps/vault/install-docker
+    cd /home/vagrant/projects/fabrik
     git checkout apps-dev
-    # sudo docker compose up -d
+    sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh || echo "CHMOD step for vault-init.sh non-fatal error"
     SHELL
   end
 

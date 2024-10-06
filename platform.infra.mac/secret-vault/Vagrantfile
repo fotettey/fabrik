@@ -18,7 +18,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
   config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
-   # config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/vault-data", "/home/vagrant/vault-data", type: "smb", mount_options: ['mfsymlink']
+  config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/vault-data/app-data", "/home/vagrant/vault-data/app-data", type: "smb"
+  config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/vault-data/certs", type: "smb"
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
@@ -40,6 +41,7 @@ Vagrant.configure("2") do |config|
     sudo groupadd docker
     sudo usermod -aG docker $USER
     newgrp docker
+    sudo chmod 666 /var/run/docker.sock
     sudo chown "$USER":"$USER" /home/"$USER"/.docker -R || echo "Docker post step non-fatal error"
     sudo chmod g+rwx "$HOME/.docker" -R  || echo "Docker post step non-fatal error"
     docker run --name hello-world hello-world || echo "Docker post step non-fatal error"
@@ -66,6 +68,7 @@ Vagrant.configure("2") do |config|
     cd /home/vagrant/projects/fabrik
     git checkout apps-dev
     sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh || echo "CHMOD step for vault-init.sh non-fatal error"
+    docker compose -f /home/vagrant/projects/fabrik/apps/vault/install-docker/docker-compose.yml up -d
     SHELL
   end
 

@@ -5,10 +5,9 @@ listener "tcp" {
   tls_disable      = "false"
   tls_disable_client_certs = "true"
   // tls_require_and_verify_client_cert="true"
-  tls_cert_file = "/tmp/certs/wildcard/wildcard.crt"
-  //tls_cert_file = "/vault/file/certs/wildcard/wildcard-fullchain.crt"
+  tls_cert_file = "/vault/file/certs/server/wildcard.local.self.crt"
   //tls_cert_file = "/vault/file/certs/server/local.self.cert-bundle.crt"
-  tls_key_file  = "/tmp/certs/wildcard/wildcard.key"
+  tls_key_file  = "/vault/file/certs/server/local.self.key"
   # This is the certificate that client certs are signed with.  In this demo
   # the same intermediate cert signs both Vault and Client certs.  But 
   # to show this differentiation, we use the ca out of the /client-certs/ dir

@@ -18,6 +18,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
   config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
+   # config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/vault-data", "/home/vagrant/vault-data", type: "smb", mount_options: ['mfsymlink']
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
@@ -49,9 +50,10 @@ Vagrant.configure("2") do |config|
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:fotettey/software.factory.git
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone https://github.com/fotettey/fabrik.git
     echo "Installing `hostname` using Docker Compose"
-    sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh
+    # sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh
     cd /home/vagrant/projects/fabrik/apps/vault/install-docker
-    sudo docker compose up -d
+    git checkout apps-dev
+    # sudo docker compose up -d
     SHELL
   end
 

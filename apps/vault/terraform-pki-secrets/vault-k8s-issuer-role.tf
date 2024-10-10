@@ -1,5 +1,5 @@
 resource "vault_pki_secret_backend_role" "vault_role" {
- backend            = vault_mount.ogd_pki_int_ca_v1.path
+ backend            = vault_mount.self_pki_int_ca_v1.path
  name               = "int-ca-certmanager"
  ttl                = local.default_1hr_in_sec
  allow_ip_sans      = true

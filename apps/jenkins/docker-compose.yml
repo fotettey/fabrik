@@ -1,0 +1,15 @@
+services:  # https://github.com/jenkinsci/docker#docker-compose-with-jenkins
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins.local.self
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+  ssh-agent:
+    image: jenkins/ssh-agent
+volumes:
+  jenkins_home:
+
+# JCASC: https://www.jenkins.io/doc/book/managing/casc/

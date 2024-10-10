@@ -1,17 +1,17 @@
 # Creating an internal Vault IntermediateCA with an Offline RootCA
 ## https://developer.hashicorp.com/vault/tutorials/secrets-management/pki-engine-external-ca
 
-resource "vault_mount" "ogd_pki_int_ca_v1" {
- path                      = "ogd_pki_int_ca/v1"
+resource "vault_mount" "self_pki_int_ca_v1" {
+ path                      = "self_pki_int_ca/v1"
  type                      = "pki"
- description               = "PKI engine hosting intermediate CA1 v1 for OGD"
+ description               = "PKI engine hosting intermediate CA1 v1 for self"
  default_lease_ttl_seconds = local.default_1hr_in_sec
  max_lease_ttl_seconds     = local.default_3y_in_sec
 }
 
-resource "vault_pki_secret_backend_intermediate_cert_request" "ogd_pki_int_ca_v1" {
- depends_on   = [vault_mount.ogd_pki_int_ca_v1]
- backend      = vault_mount.ogd_pki_int_ca_v1.path
+resource "vault_pki_secret_backend_intermediate_cert_request" "self_pki_int_ca_v1" {
+ depends_on   = [vault_mount.self_pki_int_ca_v1]
+ backend      = vault_mount.self_pki_int_ca_v1.path
  type         = "internal"
  common_name  = "Festus-Self INT CA - CertManager"
  key_type     = "rsa"
@@ -26,7 +26,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "ogd_pki_int_ca_v1
 }
 
 # output "intermediateca_csr" {
-#   value = vault_pki_secret_backend_intermediate_cert_request.ogd_pki_int_ca_v1.csr
+#   value = vault_pki_secret_backend_intermediate_cert_request.self_pki_int_ca_v1.csr
 #   description = "CSR of intCA"
 # }
 
@@ -35,7 +35,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "ogd_pki_int_ca_v1
 
 ## terraform show -json | jq '.values["root_module"]["resources"][].values.csr' -r | grep -v null > csr/Test_Org_v1_ICA1_v1.csr
 resource "local_file" "certificate" {
-    content  = vault_pki_secret_backend_intermediate_cert_request.ogd_pki_int_ca_v1.csr
+    content  = vault_pki_secret_backend_intermediate_cert_request.self_pki_int_ca_v1.csr
     filename = "${path.cwd}/csr/intca-TF.csr"
 }
 
@@ -43,7 +43,7 @@ resource "local_file" "certificate" {
 ## Simulates/example of how the EXTERNAL-CA can be used to sign the INTCA-CSR
 # Docs: https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/locally_signed_cert
 resource "tls_locally_signed_cert" "pki_int_ca" {
-  cert_request_pem   = vault_pki_secret_backend_intermediate_cert_request.ogd_pki_int_ca_v1.csr
+  cert_request_pem   = vault_pki_secret_backend_intermediate_cert_request.self_pki_int_ca_v1.csr
   ca_private_key_pem = file("rootCA/decrypted-rootCA.key")
   ca_cert_pem        = file("rootCA/rootCA.crt")
 

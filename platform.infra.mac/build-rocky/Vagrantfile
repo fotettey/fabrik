@@ -16,9 +16,10 @@ Vagrant.configure("2") do |config|
       chown -R vagrant:vagrant /home/vagrant/projects
       SHELL
 
-  config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
-  config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
-
+      config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
+      config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
+      config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/projects/certs", type: "smb"
+    
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
     # Ansible Installation
@@ -36,6 +37,14 @@ Vagrant.configure("2") do |config|
     ansible-playbook /home/vagrant/projects/build-playbook.yaml --become 
     git --version
     docker --version
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    sudo chmod 666 /var/run/docker.sock
+    sudo chown "$USER":"$USER" /home/"$USER"/.docker -R || echo "Docker post step non-fatal error"
+    sudo chmod g+rwx "$HOME/.docker" -R  || echo "Docker post step non-fatal error"
+    docker run --name hello-world hello-world || echo "Docker post step non-fatal error"
+    docker rm hello-world  || echo "Docker post step non-fatal error"
     GIT_USERNAME=fotettey
     GIT_EMAIL=fotettey@gmail.com
     git config --global user.name ${GIT_USERNAME}
@@ -47,10 +56,18 @@ Vagrant.configure("2") do |config|
     # Git Clone Projects
     cd /home/vagrant/projects
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone git@github.com:fotettey/software.factory.git
+    GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone https://github.com/fotettey/fabrik.git
+     # sudo chmod u+rw,g+rw,o+rw /home/vagrant/projects/software.factory/certs/
+     # cd /home/vagrant/projects/software.factory/certs/
+     # tar -xvzf intCA.tgz
+     # tar -xvzf wildcard.tgz
+     # sudo chmod 644 -R /home/vagrant/projects/software.factory/certs/
+     # sudo chown $(whoami):$(whoami) /home/vagrant/projects/software.factory/certs/
     echo "Installing `hostname` using Docker Compose"
-    # chmod +x /home/vagrant/projects/software.factory/home-env/build/vault/vault-init.sh
-    # cd /home/vagrant/projects/software.factory/home-env/build
-    # docker compose up -d
+    cd /home/vagrant/projects/fabrik
+    git checkout apps-dev
+     # sudo chmod +x /home/vagrant/projects/fabrik/apps/vault/install-docker/vault-configs/vault-init.sh || echo "CHMOD step for vault-init.sh non-fatal error"
+     # docker compose -f /home/vagrant/projects/fabrik/apps/vault/install-docker/docker-compose.yml up -d
     SHELL
   end
 
@@ -70,17 +87,18 @@ Vagrant.configure("2") do |config|
   end
 
 
-  config.vm.define "sonar" do |sonar|
+  config.vm.define "sonarqube" do |sonar|
     sonar.vm.box = "bento/rockylinux-9"
     sonar.vm.synced_folder ".", "/vagrant", disabled: true
     sonar.vm.boot_timeout = 3000
 
-    sonar.vm.hostname = "sonar"
+    sonar.vm.hostname = "sonarqube"
     sonar.vm.provider "vmware_desktop" do |son|
       son.vmx["memsize"] = "2024"
       son.vmx["numvcpus"] = "2"
       son.gui = false
       son.vmx["ethernet0.pcislotnumber"] = "160"
+      son.vmx["scsi0:0.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/sonarqube/sonarqube-disk-flat.vmdk"
     end
   end
 
@@ -96,6 +114,8 @@ Vagrant.configure("2") do |config|
       nex.vmx["numvcpus"] = "2"
       nex.gui = false
       nex.vmx["ethernet0.pcislotnumber"] = "160"
+      nex.vmx["scsi0:0.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/nexus/nexus-disk-flat.vmdk"
+
     end
   end
 

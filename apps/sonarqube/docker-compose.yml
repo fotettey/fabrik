@@ -18,10 +18,14 @@ services:
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: sonar
     volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_logs:/opt/sonarqube/logs
-      - sonarqube_temp:/opt/sonarqube/temp
+        # - sonarqube_data:/opt/sonarqube/data
+        # - sonarqube_extensions:/opt/sonarqube/extensions
+        # - sonarqube_logs:/opt/sonarqube/logs
+        # - sonarqube_temp:/opt/sonarqube/temp
+      - /Volumes/fot-sandisk-4TB/IT/Disks/nexus/data:/opt/sonarqube/data
+      - /Volumes/fot-sandisk-4TB/IT/Disks/nexus/extensions:/opt/sonarqube/extensions
+      - /Volumes/fot-sandisk-4TB/IT/Disks/nexus/logs:/opt/sonarqube/logs
+      - /Volumes/fot-sandisk-4TB/IT/Disks/nexus/temp:/opt/sonarqube/temp
     ports:
       - "9000:9000"
   db:

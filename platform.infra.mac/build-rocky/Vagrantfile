@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 
       config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
       config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
-      config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/projects/certs", type: "smb"
+      config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/certs", type: "smb"
     
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
@@ -71,6 +71,19 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
+  config.vm.define "postgres" do |psql|
+    psql.vm.box = "bento/rockylinux-9"
+    psql.vm.synced_folder ".", "/vagrant", disabled: true
+    psql.vm.boot_timeout = 3000
+
+    psql.vm.hostname = "postgres"
+    psql.vm.provider "vmware_desktop" do |pgsql|
+      pgsql.vmx["memsize"] = "2024"
+      pgsql.vmx["numvcpus"] = "2"
+      pgsql.gui = false
+      pgsql.vmx["ethernet0.pcislotnumber"] = "160"
+    end
+  end
 
   config.vm.define "jenkins" do |jenkins|
     jenkins.vm.box = "bento/rockylinux-9"
@@ -94,11 +107,13 @@ Vagrant.configure("2") do |config|
 
     sonar.vm.hostname = "sonarqube"
     sonar.vm.provider "vmware_desktop" do |son|
-      son.vmx["memsize"] = "2024"
+      son.vmx["memsize"] = "4096"
       son.vmx["numvcpus"] = "2"
       son.gui = false
       son.vmx["ethernet0.pcislotnumber"] = "160"
-      son.vmx["scsi0:0.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/sonarqube/sonarqube-disk-flat.vmdk"
+      son.vmx["scsi0:1.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/sonarqube/sonarqube-disk-flat.vmdk"
+      son.vmx["scsi0:1.present"] = "TRUE"
+      son.vmx["scsi0:1.deviceType"] = "scsi-hardDisk"
     end
   end
 
@@ -110,11 +125,13 @@ Vagrant.configure("2") do |config|
 
     nexus.vm.hostname = "nexus"
     nexus.vm.provider "vmware_desktop" do |nex|
-      nex.vmx["memsize"] = "2024"
-      nex.vmx["numvcpus"] = "2"
+      nex.vmx["memsize"] = "4096"
+      nex.vmx["numvcpus"] = "4"
       nex.gui = false
       nex.vmx["ethernet0.pcislotnumber"] = "160"
-      nex.vmx["scsi0:0.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/nexus/nexus-disk-flat.vmdk"
+      nex.vmx["scsi0:1.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/nexus/nexus-disk-flat.vmdk"
+      nex.vmx["scsi0:1.present"] = "TRUE"
+      nex.vmx["scsi0:1.deviceType"] = "scsi-hardDisk"
 
     end
   end

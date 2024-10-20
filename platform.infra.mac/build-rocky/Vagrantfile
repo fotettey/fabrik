@@ -18,7 +18,11 @@ Vagrant.configure("2") do |config|
 
       config.vm.provision "file", source: "~/.ssh/git-auto", destination: "/home/vagrant/.ssh/git-auto"  ## user: fotettey.at.gmail.com
       config.vm.provision "file", source: "~/Documents/GitHub/fabrik/platform.infra.mac/ansible/build-playbook.yaml", destination: "/home/vagrant/projects/build-playbook.yaml"  ## user: fotettey.at.gmail.com
-      config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/certs", type: "smb"
+      config.vm.provision "file", source: "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs/ca-chain.crt", destination: "/home/vagrant/certs/ca-chain.crt"
+      config.vm.provision "file", source: "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs/wildcard.crt", destination: "/home/vagrant/certs/wildcard.crt"
+      config.vm.provision "file", source: "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs/wildcard.key", destination: "/home/vagrant/certs/wildcard.key"
+        # config.vm.synced_folder "~/Documents/VAGRANT-DEVBOX-DOCUMENTS/certs", "/home/vagrant/certs", type: "smb" 
+        # SMB folder_sync disabled due to unresponsive permissions change in SUDOERS config ff Vagrant off docs https://developer.hashicorp.com/vagrant/docs/synced-folders/smb#macos-host
     
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive sh -c 'echo $DEBIAN_FRONTEND'
@@ -108,7 +112,7 @@ Vagrant.configure("2") do |config|
     sonar.vm.hostname = "sonarqube"
     sonar.vm.provider "vmware_desktop" do |son|
       son.vmx["memsize"] = "4096"
-      son.vmx["numvcpus"] = "2"
+      son.vmx["numvcpus"] = "4"
       son.gui = false
       son.vmx["ethernet0.pcislotnumber"] = "160"
       son.vmx["scsi0:1.fileName"] = "/Volumes/fot-sandisk-4TB/IT/Disks/sonarqube/sonarqube-disk-flat.vmdk"

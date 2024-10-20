@@ -12,14 +12,17 @@ services:
     hostname: sonarqube
     container_name: sonarqube
     read_only: true
-    depends_on:
-      db:
-        condition: service_healthy
+      # depends_on:
+      #   db:
+      #     condition: service_healthy
     environment:
-      SONAR_JDBC_URL: /run/secrets/db_jdbc_url
+        # SONAR_JDBC_URL: /run/secrets/db_jdbc_url
+        # SONAR_JDBC_USERNAME: /run/secrets/db_sonar_user
+        # SONAR_JDBC_PASSWORD: /run/secrets/db_sonar_password
         # SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
-      SONAR_JDBC_USERNAME: /run/secrets/db_sonar_user
-      SONAR_JDBC_PASSWORD: /run/secrets/db_sonar_password
+      SONAR_JDBC_URL: jdbc:postgresql://172.16.132.199:5432/sonarqube
+      SONAR_JDBC_USERNAME: sonarqube
+      SONAR_JDBC_PASSWORD: sonarqube
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
@@ -32,13 +35,13 @@ services:
     ports:
       - "9000:9000"
 
-secrets:
-   db_jdbc_url:
-     file: db_jdbc_url.txt
-   db_sonar_user:
-     file: db_sonar_user.txt
-   db_sonar_password:
-     file: db_sonar_password.txt
+  #secrets:
+  #   db_jdbc_url:
+  #     file: db_jdbc_url.txt
+    # db_sonar_user:
+    #   file: db_sonar_user.txt
+    # db_sonar_password:
+    #   file: db_sonar_password.txt
 
 volumes:
   sonarqube_data:

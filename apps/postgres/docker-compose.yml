@@ -1,4 +1,4 @@
-services:  
+services:   ## https://hub.docker.com/_/postgres
   db:
     image: postgres:15
     healthcheck:
@@ -9,15 +9,18 @@ services:
     hostname: postgresql
     container_name: postgresql
     environment:
-      POSTGRES_USER: sonar
-      POSTGRES_PASSWORD: sonar
-      POSTGRES_DB: sonar
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - /home/vagrant/postgresql-data:/var/lib/postgresql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
-secrets:
-   db_password:
-     file: db_password.txt
-   db_root_password:
-     file: db_root_password.txt
+ # secrets:
+ #    db_password:
+ #      file: db_password.txt
+ #    db_root_password:
+ #      file: db_root_password.txt
 
 volumes:
   - postgresql:/var/lib/postgresql

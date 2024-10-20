@@ -53,8 +53,9 @@ vagrant global-status
 
 
 ## Setting up Ansible Hosts Inventory
+POSTGRES_IP=$(vagrant ssh postgres -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
 JENKINS_IP=$(vagrant ssh jenkins -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
-SONAR_IP=$(vagrant ssh sonar -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
+SONARQUBE_IP=$(vagrant ssh sonarqube -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
 NEXUS_IP=$(vagrant ssh nexus -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'")
 
 

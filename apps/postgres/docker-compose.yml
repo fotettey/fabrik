@@ -22,6 +22,6 @@ services:   ## https://hub.docker.com/_/postgres
  #    db_root_password:
  #      file: db_root_password.txt
 
-volumes:
-  - postgresql:/var/lib/postgresql
-  - postgresql_data:/var/lib/postgresql/data
+  # volumes:
+  #   - postgresql:/var/lib/postgresql
+  #   - postgresql_data:/var/lib/postgresql/data

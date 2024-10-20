@@ -109,7 +109,7 @@ Vagrant.configure("2") do |config|
     sonar.vm.synced_folder ".", "/vagrant", disabled: true
     sonar.vm.boot_timeout = 3000
 
-    sonar.vm.provision "bootstrap", type: "shell" do |s|
+    sonar.vm.provision "bootstrap", type: "shell", run: "always" do |s|
       s.inline = <<-SHELL
         sudo sysctl -w vm.max_map_count=524288
         sudo sysctl -w fs.file-max=131072

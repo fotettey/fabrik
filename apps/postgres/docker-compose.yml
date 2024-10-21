@@ -13,7 +13,7 @@ services:   ## https://hub.docker.com/_/postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - /home/vagrant/postgresql-data:/var/lib/postgresql
+      - /home/vagrant/postgresql-data:/var/lib/postgresql/data
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - "5432:5432"

@@ -34,6 +34,7 @@ services:
         # - /Volumes/fot-sandisk-4TB/IT/Disks/nexus/temp:/opt/sonarqube/temp
     ports:
       - "9000:9000"
+      - "5432:5432"
 
   #secrets:
   #   db_jdbc_url:

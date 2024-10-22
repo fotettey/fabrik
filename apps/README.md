@@ -70,3 +70,34 @@ helm upgrade --install -f values.yaml \
   --create-namespace \
   --version v1.16.1 \
   --set crds.enabled=true
+
+
+# OTEL Operator:
+## https://opentelemetry.io/docs/kubernetes/operator/automatic/#installation
+## https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator#opentelemetry-operator-helm-chart
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo update
+
+## Create NS
+kubectl create ns otel-test
+kubectl label namespace otel-test istio-injection=enabled
+# kubectl label namespace otel-test default istio-injection=disabled --overwrite
+
+## https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator#install-chart
+## https://istio.io/latest/docs/tasks/observability/logs/otel-provider/
+
+helm upgrade --install -f values.yaml opentelemetry-collector open-telemetry/opentelemetry-collector 
+  --namespace=observability  \
+  --set mode=daemonset  \
+  --set image.repository="otel/opentelemetry-collector-k8s"  \
+  --set command.name="otelcol-k8s"
+
+## otel/opentelemetry-collector-k8s ERROR --> can be resolved by removing jaeger exporter and using default otelhttp exporter
+agent-p276f_observability(551f7fac-fd89-4bf3-bb4b-c40ae80dc7fb)
+[rocky@ip-10-0-9-114 otel-test]$ k logs opentelemetry-collector-agent-p276f -n observability
+Error: failed to get config: cannot unmarshal the configuration: decoding failed due to the following error(s):
+
+error decoding 'exporters': unknown type: "jaeger" for id: "jaeger" (valid values: [otelarrow debug nop otlp otlphttp file loadbalancing])
+2024/10/22 11:33:41 collector server run finished with error: failed to get config: cannot unmarshal the configuration: decoding failed due to the following error(s):
+
+error decoding 'exporters': unknown type: "jaeger" for id: "jaeger" (valid values: [otelarrow debug nop otlp otlphttp file loadbalancing])

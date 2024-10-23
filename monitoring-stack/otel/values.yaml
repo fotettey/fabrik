@@ -101,8 +101,8 @@ config:
       endpoint: http://<IP>:9090        ## Prometheus
       tls:
         insecure: true
-    otlphttp/traces:
-      endpoint: http://<IP>:4318/v1/traces    ## Jaeger
+    otlphttp/jaeger:
+      endpoint: http://<IP>:4318    ## Jaeger
       tls:
         insecure: true
       # jaeger:
@@ -190,6 +190,7 @@ config:
       traces:
         exporters:
           - debug
+          - otlphttp/jaeger
         processors:
           - memory_limiter
           - batch

@@ -74,11 +74,15 @@ kubectl create ns observability
 
 
 
-helm upgrade --install -f values.yaml opentelemetry-collector open-telemetry/opentelemetry-collector 
+helm upgrade --install -f /home/rocky/otel-test/values.yaml opentelemetry-collector open-telemetry/opentelemetry-collector \
   --namespace=observability  \
   --set mode=daemonset  \
   --set image.repository="otel/opentelemetry-collector-k8s"  \
   --set command.name="otelcol-k8s"
+
+
+
+
 
 helm upgrade --install -f values.yaml \
   cert-manager jetstack/cert-manager \

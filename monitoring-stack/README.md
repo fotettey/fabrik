@@ -16,6 +16,9 @@ https://github.com/istio/istio/blob/ac2ce6424c75446107f717f95ea537470c39b16c/man
 https://gist.github.com/Stono/9ad07fca8c447c3ee3ac2c8a546d8acf?ref=karlstoney.com
 
 
+## Istio Service Mesh
+
+
 
 
 # OTEL:
@@ -58,11 +61,28 @@ Can be installed by OLM, Helm/ K8s manifests.
 - Expose outside of the Cluster .spec.ingress
 - Use custom collector image .spec.image
 2. ## OTEL Operator - Instrumentation:
+# OTEL Collector Installation:
+## https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator#install-chart
+## https://istio.io/latest/docs/tasks/observability/logs/otel-provider/
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo update
 
-## Implementation:
-- 
-- 
-- 
+## Create NS
+kubectl create ns observability
+# kubectl label namespace otel-test istio-injection=enabled
+# kubectl label namespace otel-test default istio-injection=disabled --overwrite
+
+
+
+helm upgrade --install -f /home/rocky/otel-test/values.yaml opentelemetry-collector open-telemetry/opentelemetry-collector \
+  --namespace=observability  \
+  --set mode=daemonset  \
+  --set image.repository="otel/opentelemetry-collector-k8s"  \
+  --set command.name="otelcol-k8s"
+
+
+
+
 
 helm upgrade --install -f values.yaml \
   cert-manager jetstack/cert-manager \
@@ -70,3 +90,16 @@ helm upgrade --install -f values.yaml \
   --create-namespace \
   --version v1.16.1 \
   --set crds.enabled=true
+
+
+
+
+## otel/opentelemetry-collector-k8s ERROR --> can be resolved by removing jaeger exporter and using default otelhttp exporter
+agent-p276f_observability(551f7fac-fd89-4bf3-bb4b-c40ae80dc7fb)
+[rocky@ip-10-0-9-114 otel-test]$ k logs opentelemetry-collector-agent-p276f -n observability
+Error: failed to get config: cannot unmarshal the configuration: decoding failed due to the following error(s):
+
+error decoding 'exporters': unknown type: "jaeger" for id: "jaeger" (valid values: [otelarrow debug nop otlp otlphttp file loadbalancing])
+2024/10/22 11:33:41 collector server run finished with error: failed to get config: cannot unmarshal the configuration: decoding failed due to the following error(s):
+
+error decoding 'exporters': unknown type: "jaeger" for id: "jaeger" (valid values: [otelarrow debug nop otlp otlphttp file loadbalancing])

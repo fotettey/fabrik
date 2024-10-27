@@ -43,9 +43,8 @@ jenkins:
       permissions:
         - "USER:Overall/Administer:admin"
         - "USER:Overall/Read:authenticated"
-        - "USER:Overall/Read:anonymous"
-     # loggedInUsersCanDoAnything:
-     #   allowAnonymousRead: false
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
       
 # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/global-matrix-auth
 

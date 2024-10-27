@@ -1,6 +1,7 @@
   # Jenkins CASC configuration done ff doc:
   # https://www.digitalocean.com/community/tutorials/how-to-automate-jenkins-setup-with-docker-and-jenkins-configuration-as-code
-
+  # https://github.com/jenkinsci/docker/#preinstalling-plugins
+  # https://dev.to/selmaguedidi/a-dive-into-jenkins-configuration-as-code-jcasc-4dj0
 
 FROM jenkins/jenkins:2.482
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false

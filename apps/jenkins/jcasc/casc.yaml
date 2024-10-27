@@ -58,6 +58,18 @@ unclassified:
   location:
     url: http://jenkins.dev.local.self:8080/
 
+  scmGit:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    globalConfigEmail: "${GIT_SSH_USER}"
+    globalConfigName: "${GIT_SSH_USER}"
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: true
+    useExistingAccountWithSameEmail: false
+
+
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/secrets.adoc
 credentials:
   system:

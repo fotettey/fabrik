@@ -7,7 +7,7 @@
 
 services:
   nexus:
-    image: sonatype/nexus3
+    image: sonatype/nexus3:3.70.3-java17-alpine
     ulimits:
       nofile:
         soft: 65536

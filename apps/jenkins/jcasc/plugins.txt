@@ -16,7 +16,7 @@ matrix-auth:3.2.3                               # Requires Jenkins 2.426.3
 pam-auth:1.11                                   # Requires Jenkins 2.361.4
 pipeline-github-lib:61.v629f2cc41d83            # Requires Jenkins 2.361.4
 pipeline-stage-view:2.34                        # Requires Jenkins 2.361.4
-release:2.19                                    # Requires Jenkins 2.387.3
+# release:2.19                                    # Requires Jenkins 2.387.3
 role-strategy:743.v142ea_b_d5f1d3               # Requires Jenkins 2.440.3                                   
 ssh-slaves:2.973.v0fa_8c0dea_f9f                # Requires Jenkins 2.426.3
 timestamper:1.27                                # Requires Jenkins 2.375.4

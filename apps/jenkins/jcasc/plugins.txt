@@ -14,6 +14,10 @@ git:5.6.0                                       # Requires Jenkins 2.479
 github-branch-source:1807.v50351eb_7dd13        # Requires Jenkins 2.440.3
 gradle:2.13.1                                   # Requires Jenkins 2.401.3
 ldap:759.vef7f616475df                          # Requires Jenkins 2.475
+kubernetes:4295.v7fa_01b_309c95                 # Requires Jenkins 2.426.3
+kubernetes-client-api:240.v57880ce8b_0b_2       # Requires Jenkins 2.401.3
+kubernetes-credentials:190.v03c305394deb_       # Requires Jenkins 2.426.3
+kubernetes-cli:1.12.1                           # Requires Jenkins 2.401.1
 mailer:489.vd4b_25144138f                       # Requires Jenkins 2.479
 matrix-auth:3.2.3                               # Requires Jenkins 2.426.3
 pam-auth:1.11                                   # Requires Jenkins 2.361.4

@@ -1,0 +1,12 @@
+## https://istio.io/latest/docs/tasks/observability/logs/otel-provider/
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: sleep-logging
+spec:
+  selector:
+    matchLabels:
+      app: sleep
+  accessLogging:
+    - providers:
+      - name: otel

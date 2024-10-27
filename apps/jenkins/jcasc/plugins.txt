@@ -1,0 +1,38 @@
+ant:511.v0a_a_1a_334f41b_                       # Requires Jenkins 2.440.3
+antisamy-markup-formatter:162.v0e6ec0fcfcf6     # Requires Jenkins 2.387.3
+authorize-project:1.8.1                         # Requires Jenkins 2.452.4
+adoptopenjdk:1.5                                # Requires Jenkins 2.289.1
+build-timeout:1.33                              # Requires Jenkins 2.440.3
+cloudbees-folder:6.955.v81e2a_35c08d3           # Requires Jenkins 2.462.1
+configuration-as-code:1850.va_a_8c31d3158b_     # Requires Jenkins 2.440.3
+config-file-provider:980.v88956a_a_5d6a_d       # Requires Jenkins 2.414.3
+credentials-binding:687.v619cb_15e923f          # Requires Jenkins 2.479
+credentials:1389.vd7a_b_f5fa_50a_2              # Requires Jenkins 2.479
+docker-plugin:1.7.0                             # Requires Jenkins 2.452.4
+docker-workflow:580.vc0c340686b_54              # Requires Jenkins 2.361.4
+email-ext:1844.v3ea_a_b_842374a_                # Requires Jenkins 2.440.3
+git:5.6.0                                       # Requires Jenkins 2.479
+github-branch-source:1807.v50351eb_7dd13        # Requires Jenkins 2.440.3
+git-client:6.1.0                                # Requires Jenkins 2.479
+gradle:2.13.1                                   # Requires Jenkins 2.401.3
+ldap:759.vef7f616475df                          # Requires Jenkins 2.475
+kubernetes:4295.v7fa_01b_309c95                 # Requires Jenkins 2.426.3
+kubernetes-credentials:190.v03c305394deb_       # Requires Jenkins 2.426.3
+kubernetes-cli:1.12.1                           # Requires Jenkins 2.401.1
+kubernetes-client-api:6.10.0-240.v57880ce8b_0b_2       # Requires Jenkins 2.401.3
+mailer:489.vd4b_25144138f                       # Requires Jenkins 2.479
+matrix-auth:3.2.3                               # Requires Jenkins 2.426.3
+maven-plugin:3.24                               # Requires Jenkins 2.440.3
+pipeline-maven:1457.vf7a_de13b_c0d4             # Requires Jenkins 2.426.3
+pam-auth:1.11                                   # Requires Jenkins 2.361.4
+pipeline-github-lib:61.v629f2cc41d83            # Requires Jenkins 2.361.4
+pipeline-stage-view:2.34                        # Requires Jenkins 2.361.4
+# release:2.19                                    # Requires Jenkins 2.387.3
+role-strategy:743.v142ea_b_d5f1d3               # Requires Jenkins 2.440.3                                   
+ssh-slaves:2.973.v0fa_8c0dea_f9f                # Requires Jenkins 2.426.3
+sonar:2.17.2                                    # Requires Jenkins 2.387.3
+timestamper:1.27                                # Requires Jenkins 2.375.4
+workflow-aggregator:600.vb_57cdd26fdd7          # Requires Jenkins 2.361.4
+ws-cleanup:0.47                                 # Requires Jenkins 2.440.3
+
+## github-oauth                                    # Requires Jenkins 2.479

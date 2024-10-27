@@ -123,3 +123,6 @@ Icon
 /*/*/Network Trash Folder
 /*/*/Temporary Items
 /*/*/.apdisk
+
+# Source files
+/apps/jenkins/jcasc/src

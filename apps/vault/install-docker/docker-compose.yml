@@ -1,0 +1,43 @@
+services:
+  vault:
+    image: hashicorp/vault:1.16
+    container_name: vault
+    hostname: vault.local.self
+    ports:
+      - 8200:8200
+    volumes:
+      - ./vault-configs/config-tls.hcl:/vault/config/config-tls.hcl
+      - ./vault-configs/pki_int_policy.hcl:/vault/config/pki_int_policy.hcl
+      - vault-data:/vault/file/
+      - /home/vagrant/vault-data/certs/wildcard.crt:/vault/certs/wildcard/wildcard.crt
+      - /home/vagrant/vault-data/certs/wildcard.key:/vault/certs/wildcard/wildcard.key
+    environment:
+      - VAULT_ADDR=https://127.0.0.1:8200
+    cap_add:
+      - IPC_LOCK
+    command: vault server -config=/vault/config/config-tls.hcl
+    restart: unless-stopped
+
+  vault-init:
+    image: hashicorp/vault:1.16
+    container_name: vault-init
+    privileged: true
+    environment:
+      - VAULT_ADDR=https://vault.local.self:8200
+      - MY_VAULT_TOKEN=${MY_VAULT_TOKEN:-test}
+        #This verifies the Server Cert, so we use it's CA chain, not the clients
+      - VAULT_CACERT="/vault/certs/intCA/ca-chain.crt"
+       #- VAULT_CLIENT_CERT="/vault/file/pki/output/client-certs/client-cert.pem"
+       #- VAULT_CLIENT_KEY="/vault/file/pki/output/client-certs/client-key.pem"
+    volumes:
+      - ./vault-root-token:/vault/file/vault-root-token
+      - ./vault-configs/vault-init.sh:/usr/local/bin/vault-init.sh
+      - vault-data:/vault/file/
+      - /home/vagrant/vault-data/certs/ca-chain.crt:/vault/certs/intCA/ca-chain.crt
+    entrypoint: /usr/local/bin/vault-init.sh
+    restart: on-failure
+    depends_on:
+      - vault
+
+volumes:
+  vault-data:

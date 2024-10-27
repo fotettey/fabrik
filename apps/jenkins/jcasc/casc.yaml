@@ -1,0 +1,175 @@
+ # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  numExecutors: 5
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+
+    # globalNodeProperties:
+    #   - envVars:
+    #       env:
+    #         - key: FOO
+    #           value: BAR
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+        # - id: ${JENKINS_USER_ID}
+        #   password: ${JENKINS_USER_PASSWORD}
+
+  nodes:    # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/build_agents
+    - permanent:
+        labelString: "linux-docker-node-1"
+        mode: NORMAL
+        name: "linux-docker-node-1"
+        numExecutors: 4
+        remoteFS: "/home/vagrant"
+        launcher:
+          SSHLauncher:
+            host: "192.168.1.1"
+            port: 22
+            credentialsId: ssh_git_auto
+            launchTimeoutSeconds: 60
+            maxNumRetries: 3
+            retryWaitTime: 30
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "USER:Overall/Administer:admin"
+        - "USER:Overall/Read:authenticated"    
+# https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/global-matrix-auth
+  remotingSecurity:
+    enabled: true
+
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy
+
+unclassified:
+  location:
+    url: http://jenkins.dev.local.self:8080/
+
+  scmGit:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    globalConfigEmail: "${GIT_SSH_USER}"
+    globalConfigName: "${GIT_SSH_USER}"
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: true
+    useExistingAccountWithSameEmail: false
+
+
+# https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/features/secrets.adoc
+credentials:
+  system:
+    domainCredentials:
+      - credentials: # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/credentials
+          # Another option passing via a file via ${readFile:/path/to/file}
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: ssh_git_auto
+              username: "${GIT_SSH_USER}"
+              passphrase: "${GIT_SSH_KEY_PASSWORD}"
+              description: "Git SSH passphrase with private key file. Private key provided"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:${GIT_SSH_PRIVATE_FILE_PATH}}"
+          #- basicSSHUserPrivateKey:
+          #    scope: SYSTEM
+          #    id: ssh_vm_admin
+          #    username: ssh_root
+          #    passphrase: "${GIT_SSH_KEY_PASSWORD}"
+          #    description: "SSH passphrase with private key file. Private key provided"
+          #    privateKeySource:
+          #      directEntry:
+          #        privateKey: "${readFile:${VM_SSH_PRIVATE_FILE_PATH}}"
+            # - usernamePassword:
+            #     scope: GLOBAL
+            #     id: "username"
+            #     username: "some-user"
+            #     password: "${SOME_USER_PASSWORD}"
+            #     description: "Username/Password Credentials for some-user"
+            # - string:
+            #     scope: GLOBAL
+            #     id: "secret-text"
+            #     secret: "${SECRET_TEXT}"
+            #     description: "Secret Text"
+            # - aws:
+            #     scope: GLOBAL
+            #     id: "AWS"
+            #     accessKey: "${AWS_ACCESS_KEY}"
+            #     secretKey: "${AWS_SECRET_ACCESS_KEY}"
+            #     description: "AWS Credentials"
+
+tool:
+  git: # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/git-client
+    installations:
+      - name: git
+        home: /usr/local/bin/git
+  maven:  # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/maven
+    installations:
+      - name: maven3
+        properties:
+          - installSource:
+              installers:
+                - maven:
+                    id: "3.8.4"
+
+   # https://plugins.jenkins.io/adoptopenjdk/
+  jdk:  # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/jdk
+    installations:
+    - name: "jdk11"
+      properties:
+      - installSource:
+          installers:
+          - zip:
+              label: "linux && amd64 && !Alpine && !cloud"
+              subdir: "jdk-11.0.21+9"
+              url: "https://example.com/jdk/11/OpenJDK11U-jdk_x64_linux_hotspot_11.0.21_9.tar.gz"
+          - zip:
+              label: "windows && amd64"
+              subdir: "jdk-11.0.21+9"
+              url: "https://example.com/jdk/11/OpenJDK11U-jdk_x64_windows_hotspot_11.0.21_9.zip"
+          - command:
+              command: "true"
+              label: "cloud"
+              toolHome: "/home/jenkins/tools/jdk-11.0.21+9"
+          - command:
+              command: "true"
+              label: "freebsd"
+              toolHome: "/usr/local/openjdk11"
+          - adoptOpenJdkInstaller:
+              id: "jdk-11.0.21+9"
+    - name: "jdk17"
+      properties:
+      - installSource:
+          installers:
+          - zip:
+              label: "linux && amd64 && !Alpine && !cloud"
+              subdir: "jdk-17.0.9+9"
+              url: "https://example.com/jdk/17/OpenJDK17U-jdk_x64_linux_hotspot_17.0.9_9.tar.gz"
+          - zip:
+              label: "windows && amd64"
+              subdir: "jdk-17.0.9+9"
+              url: "https://example.com/jdk/17/OpenJDK17U-jdk_x64_windows_hotspot_17.0.9_9.zip"
+          - command:
+              command: "true"
+              label: "cloud"
+              toolHome: "/home/jenkins/tools/jdk-17.0.9+9"
+          - command:
+              command: "true"
+              label: "freebsd"
+              toolHome: "/usr/local/openjdk17"
+          - adoptOpenJdkInstaller:
+              id: "jdk-17.0.9+9"

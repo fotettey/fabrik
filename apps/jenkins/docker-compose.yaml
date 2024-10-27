@@ -1,0 +1,20 @@
+services:  # https://github.com/jenkinsci/docker#docker-compose-with-jenkins
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins.local.self
+      # Jenkins CASC configuration done ff doc:
+      # https://www.digitalocean.com/community/tutorials/how-to-automate-jenkins-setup-with-docker-and-jenkins-configuration-as-code
+    environment:
+        # - JAVA_OPTS -Djenkins.install.runSetupWizard=false
+
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+  ssh-agent:
+    image: jenkins/ssh-agent
+volumes:
+  jenkins_home:
+
+# JCASC: https://www.jenkins.io/doc/book/managing/casc/

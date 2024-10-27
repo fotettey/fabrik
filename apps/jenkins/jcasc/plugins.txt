@@ -5,6 +5,7 @@ adoptopenjdk:1.5                                # Requires Jenkins 2.289.1
 build-timeout:1.33                              # Requires Jenkins 2.440.3
 cloudbees-folder:6.955.v81e2a_35c08d3           # Requires Jenkins 2.462.1
 configuration-as-code:1850.va_a_8c31d3158b_     # Requires Jenkins 2.440.3
+config-file-provider:980.v88956a_a_5d6a_d       # Requires Jenkins 2.414.3
 credentials-binding:687.v619cb_15e923f          # Requires Jenkins 2.479
 credentials:1389.vd7a_b_f5fa_50a_2              # Requires Jenkins 2.479
 docker-plugin:1.7.0                             # Requires Jenkins 2.452.4
@@ -20,6 +21,8 @@ kubernetes-credentials:190.v03c305394deb_       # Requires Jenkins 2.426.3
 kubernetes-cli:1.12.1                           # Requires Jenkins 2.401.1
 mailer:489.vd4b_25144138f                       # Requires Jenkins 2.479
 matrix-auth:3.2.3                               # Requires Jenkins 2.426.3
+maven-plugin:3.24                               # Requires Jenkins 2.440.3
+pipeline-maven:1457.vf7a_de13b_c0d4             # Requires Jenkins 2.426.3
 pam-auth:1.11                                   # Requires Jenkins 2.361.4
 pipeline-github-lib:61.v629f2cc41d83            # Requires Jenkins 2.361.4
 pipeline-stage-view:2.34                        # Requires Jenkins 2.361.4

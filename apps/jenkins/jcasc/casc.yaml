@@ -1,0 +1,106 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  numExecutors: 5
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+
+    # globalNodeProperties:
+    #   - envVars:
+    #       env:
+    #         - key: FOO
+    #           value: BAR
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+        # - id: ${JENKINS_USER_ID}
+        #   password: ${JENKINS_USER_PASSWORD}
+
+  nodes:    # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/build_agents
+    - permanent:
+        labelString: "linux-docker-host"
+        mode: NORMAL
+        name: "utility-node-2"
+        numExecutors: 4
+        remoteFS: "/home/vagrant"
+        launcher:
+          SSHLauncher:
+            host: "192.168.1.1"
+            port: 22
+            credentialsId: test
+            launchTimeoutSeconds: 60
+            maxNumRetries: 3
+            retryWaitTime: 30
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+      
+# https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/global-matrix-auth
+
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy
+
+unclassified:
+  location:
+    url: http://jenkins.dev.local.self:8080/
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials: # https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/credentials
+          # Another option passing via a file via ${readFile:/path/to/file}
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: ssh_git_auto
+              username: "${GIT_SSH_USER}"
+              passphrase: "${GIT_SSH_KEY_PASSWORD}"
+              description: "Git SSH passphrase with private key file. Private key provided"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:${GIT_SSH_PRIVATE_FILE_PATH}}"
+          #- basicSSHUserPrivateKey:
+          #    scope: SYSTEM
+          #    id: ssh_vm_admin
+          #    username: ssh_root
+          #    passphrase: "${GIT_SSH_KEY_PASSWORD}"
+          #    description: "SSH passphrase with private key file. Private key provided"
+          #    privateKeySource:
+          #      directEntry:
+          #        privateKey: "${readFile:${VM_SSH_PRIVATE_FILE_PATH}}"
+            # - usernamePassword:
+            #     scope: GLOBAL
+            #     id: "username"
+            #     username: "some-user"
+            #     password: "${SOME_USER_PASSWORD}"
+            #     description: "Username/Password Credentials for some-user"
+            # - string:
+            #     scope: GLOBAL
+            #     id: "secret-text"
+            #     secret: "${SECRET_TEXT}"
+            #     description: "Secret Text"
+            # - aws:
+            #     scope: GLOBAL
+            #     id: "AWS"
+            #     accessKey: "${AWS_ACCESS_KEY}"
+            #     secretKey: "${AWS_SECRET_ACCESS_KEY}"
+            #     description: "AWS Credentials"
+
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/local/bin/git

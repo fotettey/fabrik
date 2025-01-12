@@ -24,6 +24,9 @@ PYTHON_VERSION=$(python3 --version | awk '{print $2}' | cut -d. -f1,2)
 if [ "$PYTHON_VERSION" = "$PREFERRED_PYTHON_VERSION" ]; then
     echo "Python3.11 installed and present"
     ## Configuring & Installing NMAP
+     #sudo apt update
+    sudo apt install -y python3-venv  # Ensure `venv` is installed
+    sudo apt install -y libcairo2 libcairo2-dev libgirepository1.0-dev build-essential pkg-config python3-dev gir1.2-gtk-3.0
     cd /usr/lib/python$PREFERRED_PYTHON_VERSION
     sudo rm /usr/lib/$PREFERRED_PYTHON_VERSION/EXTERNALLY-MANAGED.original
     sudo pip install setuptools==62.0.0
@@ -37,11 +40,14 @@ if [ "$PYTHON_VERSION" = "$PREFERRED_PYTHON_VERSION" ]; then
 elif [ "$PYTHON_VERSION" != "$PREFERRED_PYTHON_VERSION" ]; then
     echo "Different Python3 version installed and present"
     ## Configuring & Installing NMAP
-    sudo apt install python3-venv  # Ensure `venv` is installed
+    sudo apt update
+    sudo apt install -y python3-venv  # Ensure `venv` is installed
+    sudo apt install -y libcairo2 libcairo2-dev libgirepository1.0-dev build-essential pkg-config python3-dev gir1.2-gtk-3.0
     python3 -m venv myenv          # Create a virtual environment
     source myenv/bin/activate      # Activate the environment
     pip install setuptools==62.0.0    # Install packages within the environment
     sudo pip install build
+    cd ~/nmap
     ./configure --help
     ./configure
     sudo make

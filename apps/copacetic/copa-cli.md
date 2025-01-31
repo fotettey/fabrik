@@ -1,7 +1,7 @@
 1. Run BUildKit container:
 
 ```
-docker run --rm -d --privileged -p 127.0.0.1:8888:8888/tcp --name buildkitd moby/buildkit:v0.18.2 -addr tcp://0.0.0.0:8888docker run --rm -d --privileged -p 127.0.0.1:8888:8888/tcp --name buildkitd moby/buildkit:v0.18.2 -addr tcp://0.0.0.0:8888
+docker run --rm -d --privileged -p 127.0.0.1:8888:8888/tcp --name buildkitd moby/buildkit:v0.18.2 -addr tcp://0.0.0.0:8888
 
 ```
 

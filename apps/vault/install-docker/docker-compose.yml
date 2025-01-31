@@ -1,6 +1,6 @@
 services:
   vault:
-    image: hashicorp/vault:1.16
+    image: hashicorp/vault:1.18.3
     container_name: vault
     hostname: vault.local.self
     ports:
